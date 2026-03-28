@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@nestjs/bullmq/lib/*": ["node_modules/@nestjs/bullmq/dist/*"],
+      "@app/cache": ["shared/cache/src"],
+      "@app/cache/*": ["shared/cache/src/*"],
+      "@app/common": ["shared/common/src"],
+      "@app/common/*": ["shared/common/src/*"],
+      "@app/database": ["shared/database/src"],
+      "@app/database/*": ["shared/database/src/*"],
+      "@app/queue": ["shared/queue/src"],
+      "@app/queue/*": ["shared/queue/src/*"],
+      "@app/supabase-auth": ["shared/supabase-auth/src"],
+      "@app/supabase-auth/*": ["shared/supabase-auth/src/*"]
+    }
+  }
+}
