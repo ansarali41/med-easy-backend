@@ -4,7 +4,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-hospital:latest
+      url: ghcr.io/ansarali41/med-easy-hospital:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -27,7 +27,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-appointment:latest
+      url: ghcr.io/ansarali41/med-easy-appointment:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -50,7 +50,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-patient:latest
+      url: ghcr.io/ansarali41/med-easy-patient:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -73,7 +73,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-prescription:latest
+      url: ghcr.io/ansarali41/med-easy-prescription:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -96,7 +96,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-pharmacy:latest
+      url: ghcr.io/ansarali41/med-easy-pharmacy:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -119,7 +119,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-billing:latest
+      url: ghcr.io/ansarali41/med-easy-billing:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -142,7 +142,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-notification:latest
+      url: ghcr.io/ansarali41/med-easy-notification:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -165,7 +165,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-lab:latest
+      url: ghcr.io/ansarali41/med-easy-lab:latest
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
