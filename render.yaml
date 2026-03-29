@@ -2,9 +2,10 @@ services:
   - name: med-easy-hospital
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-hospital:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.hospital
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -25,9 +26,10 @@ services:
   - name: med-easy-appointment
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-appointment:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.appointment
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -48,9 +50,10 @@ services:
   - name: med-easy-patient
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-patient:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.patient
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -71,9 +74,10 @@ services:
   - name: med-easy-prescription
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-prescription:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.prescription
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -94,9 +98,10 @@ services:
   - name: med-easy-pharmacy
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-pharmacy:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.pharmacy
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -117,9 +122,10 @@ services:
   - name: med-easy-billing
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-billing:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.billing
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -140,9 +146,10 @@ services:
   - name: med-easy-notification
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-notification:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.notification
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
@@ -163,9 +170,10 @@ services:
   - name: med-easy-lab
     type: web
     plan: free
-    runtime: image
-    image:
-      url: ghcr.io/ansarali41/med-easy-lab:latest
+    runtime: docker
+    dockerfilePath: docker/Dockerfile.lab
+    dockerContext: .
+    branch: main
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
