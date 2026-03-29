@@ -12,7 +12,7 @@ services:
         value: production
       - key: PORT
         value: 3001
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -36,7 +36,7 @@ services:
         value: production
       - key: PORT
         value: 3002
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -60,7 +60,7 @@ services:
         value: production
       - key: PORT
         value: 3003
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -84,7 +84,7 @@ services:
         value: production
       - key: PORT
         value: 3004
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -108,7 +108,7 @@ services:
         value: production
       - key: PORT
         value: 3005
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -132,7 +132,7 @@ services:
         value: production
       - key: PORT
         value: 3006
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -156,7 +156,7 @@ services:
         value: production
       - key: PORT
         value: 3007
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
@@ -180,7 +180,7 @@ services:
         value: production
       - key: PORT
         value: 3008
-      - key: DATABASE_URL
+      - key: POSTGRESQL_DATABASE_URL
         sync: false
       - key: REDIS_URL
         sync: false
