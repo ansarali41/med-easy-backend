@@ -1,0 +1,184 @@
+services:
+  - name: med-easy-hospital
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-hospital:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-appointment
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-appointment:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3002
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-patient
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-patient:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3003
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-prescription
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-prescription:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3004
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-pharmacy
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-pharmacy:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3005
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-billing
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-billing:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3006
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-notification
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-notification:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3007
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - name: med-easy-lab
+    type: web
+    plan: free
+    runtime: image
+    image:
+      url: ghcr.io/YOUR_GITHUB_USERNAME/med-easy-lab:latest
+    healthCheckPath: /api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3008
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
