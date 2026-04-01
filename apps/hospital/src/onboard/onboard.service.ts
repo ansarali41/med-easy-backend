@@ -6,25 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { Hospital, User, UserRole } from '@app/database';
+import { DepartmentTemplate, Hospital, User, UserRole } from '@app/database';
 import { SupabaseAuthService } from '@app/supabase-auth';
-import { OnboardHospitalDto } from './onboard.dto';
-
-const DEFAULT_DEPARTMENTS = [
-  { name: 'General Medicine', description: 'General outpatient and inpatient care' },
-  { name: 'Emergency', description: '24/7 emergency medical services' },
-  { name: 'Surgery', description: 'Surgical procedures and post-operative care' },
-  { name: 'Pediatrics', description: 'Medical care for infants, children and adolescents' },
-  {
-    name: 'Obstetrics & Gynecology',
-    description: "Women's health and maternity care",
-  },
-  { name: 'Cardiology', description: 'Heart and cardiovascular system care' },
-  { name: 'Orthopedics', description: 'Bone, joint and musculoskeletal care' },
-  { name: 'Radiology', description: 'Medical imaging and diagnostics' },
-  { name: 'Pharmacy', description: 'Medication dispensing and management' },
-  { name: 'Laboratory', description: 'Diagnostic laboratory services' },
-];
+import { OnboardHospitalDto, OnboardResponseDto } from './dto/onboard.dto';
 
 @Injectable()
 export class OnboardService {
@@ -35,12 +19,20 @@ export class OnboardService {
     private readonly hospitalRepo: Repository<Hospital>,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    @InjectRepository(DepartmentTemplate)
+    private readonly departmentTemplateRepo: Repository<DepartmentTemplate>,
     private readonly dataSource: DataSource,
     private readonly supabaseAuth: SupabaseAuthService,
   ) {}
 
-  async onboard(dto: OnboardHospitalDto) {
-    const { hospital: h, adminEmail, adminPassword, adminFirstName, adminLastName } = dto;
+  async onboard(dto: OnboardHospitalDto): Promise<OnboardResponseDto> {
+    const {
+      hospital: h,
+      adminEmail,
+      adminPassword,
+      adminFirstName,
+      adminLastName,
+    } = dto;
 
     const slug = this.toSlug(h.name);
 
@@ -52,18 +44,30 @@ export class OnboardService {
       );
     }
 
-    const existingUser = await this.userRepo.findOne({ where: { email: adminEmail } });
+    const existingUser = await this.userRepo.findOne({
+      where: { email: adminEmail },
+    });
     if (existingUser) {
-      throw new ConflictException('An account with this email is already registered.');
+      throw new ConflictException(
+        'An account with this email is already registered.',
+      );
     }
 
-    // Step 1: Create the Supabase auth user (outside DB transaction)
-    // email_confirm: true so no verification email is required
-    const authUser = await this.supabaseAuth.createUser(adminEmail, adminPassword, {
-      first_name: adminFirstName,
-      last_name: adminLastName,
-      role: 'hospital_admin',
+    // Load department templates seeded via migration
+    const departmentTemplates = await this.departmentTemplateRepo.find({
+      where: { isActive: true },
     });
+
+    // Step 1: Create the Supabase auth user (outside DB transaction)
+    const authUser = await this.supabaseAuth.createUser(
+      adminEmail,
+      adminPassword,
+      {
+        first_name: adminFirstName,
+        last_name: adminLastName,
+        role: 'hospital_admin',
+      },
+    );
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -111,8 +115,8 @@ export class OnboardService {
         )
       `);
 
-      // Step 6: Seed default departments
-      for (const dept of DEFAULT_DEPARTMENTS) {
+      // Step 6: Seed departments from migration-seeded templates
+      for (const dept of departmentTemplates) {
         await queryRunner.query(
           `INSERT INTO "${schemaName}".departments (name, description) VALUES ($1, $2)`,
           [dept.name, dept.description],
@@ -125,18 +129,16 @@ export class OnboardService {
         `Onboarded: "${h.name}" (${savedHospital.id}) — schema: ${schemaName}`,
       );
 
-      return {
-        hospitalId: savedHospital.id,
-        slug,
-        message: 'Hospital registered successfully.',
-      };
+      return { hospitalId: savedHospital.id, slug };
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
       // Compensate: remove the Supabase auth user so there is no orphaned account
       try {
         await this.supabaseAuth.deleteUser(authUser.id);
-        this.logger.warn(`Compensated: deleted Supabase user ${authUser.id} after DB rollback`);
+        this.logger.warn(
+          `Compensated: deleted Supabase user ${authUser.id} after DB rollback`,
+        );
       } catch (deleteErr) {
         this.logger.error(
           `Failed to delete Supabase user ${authUser.id} after DB rollback — manual cleanup needed`,
@@ -145,7 +147,9 @@ export class OnboardService {
       }
 
       this.logger.error('Onboarding failed, transaction rolled back', err);
-      throw new InternalServerErrorException('Onboarding failed. Please try again.');
+      throw new InternalServerErrorException(
+        'Onboarding failed. Please try again.',
+      );
     } finally {
       await queryRunner.release();
     }
