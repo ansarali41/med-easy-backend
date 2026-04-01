@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from 'shared/database/src';
-import { SupabaseAuthModule } from 'shared/supabase-auth/src';
-import { QueueModule } from 'shared/queue/src';
+import { DatabaseModule } from '@app/database';
+import { SupabaseAuthModule } from '@app/supabase-auth';
+import { QueueModule } from '@app/queue';
+import { CoreModule } from '@app/common';
 import { PrescriptionServiceController } from './prescription-service.controller';
 import { PrescriptionServiceService } from './prescription-service.service';
 
@@ -12,6 +13,7 @@ import { PrescriptionServiceService } from './prescription-service.service';
     DatabaseModule,
     SupabaseAuthModule,
     QueueModule,
+    CoreModule,
   ],
   controllers: [PrescriptionServiceController],
   providers: [PrescriptionServiceService],

@@ -3,7 +3,9 @@ import { PrescriptionServiceService } from './prescription-service.service';
 
 @Controller()
 export class PrescriptionServiceController {
-  constructor(private readonly prescriptionServiceService: PrescriptionServiceService) {}
+  constructor(
+    private readonly prescriptionServiceService: PrescriptionServiceService,
+  ) {}
 
   @Get()
   getHello(): string {

@@ -4,6 +4,7 @@ export * from './entities/user.entity';
 export * from './entities/doctor.entity';
 export * from './entities/patient.entity';
 export * from './entities/department.entity';
+export * from './entities/department-template.entity';
 export * from './entities/appointment.entity';
 export * from './entities/prescription.entity';
 export * from './entities/medicine.entity';

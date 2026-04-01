@@ -1,21 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseModule, Hospital, User } from '@app/database';
-import { SupabaseAuthModule } from '@app/supabase-auth';
+import { DatabaseModule } from '@app/database';
+import { CoreModule } from '@app/common';
 import { HospitalServiceController } from './hospital-service.controller';
 import { HospitalServiceService } from './hospital-service.service';
-import { OnboardController } from './onboard/onboard.controller';
-import { OnboardService } from './onboard/onboard.service';
+import { OnboardModule } from './onboard/onboard.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
-    SupabaseAuthModule,
-    TypeOrmModule.forFeature([Hospital, User]),
+    CoreModule,
+    OnboardModule,
   ],
-  controllers: [HospitalServiceController, OnboardController],
-  providers: [HospitalServiceService, OnboardService],
+  controllers: [HospitalServiceController],
+  providers: [HospitalServiceService],
 })
 export class HospitalServiceModule {}
