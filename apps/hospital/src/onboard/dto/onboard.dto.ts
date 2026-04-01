@@ -51,6 +51,11 @@ export class HospitalInfoDto {
 }
 
 export class OnboardHospitalDto {
+  @ApiProperty({ description: 'Secret registration key required to register a hospital' })
+  @IsString()
+  @IsNotEmpty()
+  registrationKey: string;
+
   @ApiProperty({ type: HospitalInfoDto })
   @ValidateNested()
   @Type(() => HospitalInfoDto)
