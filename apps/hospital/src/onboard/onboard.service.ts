@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -27,12 +28,19 @@ export class OnboardService {
 
   async onboard(dto: OnboardHospitalDto): Promise<OnboardResponseDto> {
     const {
+      registrationKey,
       hospital: h,
       adminEmail,
       adminPassword,
       adminFirstName,
       adminLastName,
     } = dto;
+
+    // Validate registration secret key
+    const expectedKey = process.env.ONBOARD_SECRET_KEY;
+    if (!expectedKey || registrationKey !== expectedKey) {
+      throw new ForbiddenException('Invalid registration key.');
+    }
 
     const slug = this.toSlug(h.name);
 
@@ -74,7 +82,7 @@ export class OnboardService {
     await queryRunner.startTransaction();
 
     try {
-      // Step 2: Create hospital record
+      // Step 2: Create hospital record (inactive until approved)
       const hospital = queryRunner.manager.create(Hospital, {
         name: h.name,
         slug,
@@ -85,10 +93,11 @@ export class OnboardService {
         city: h.city,
         country: h.country,
         website: h.website ?? undefined,
+        isActive: false,
       });
       const savedHospital = await queryRunner.manager.save(hospital);
 
-      // Step 3: Create admin user record linked to the Supabase auth user
+      // Step 3: Create admin user record linked to the Supabase auth user (inactive until approved)
       const user = queryRunner.manager.create(User, {
         supabaseId: authUser.id,
         email: adminEmail,
@@ -96,6 +105,7 @@ export class OnboardService {
         lastName: adminLastName,
         role: UserRole.HOSPITAL_ADMIN,
         tenantId: savedHospital.id,
+        isActive: false,
       });
       await queryRunner.manager.save(user);
 
