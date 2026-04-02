@@ -1,14 +1,20 @@
 export * from './database.module';
-export * from './entities/hospital.entity';
-export * from './entities/user.entity';
-export * from './entities/doctor.entity';
-export * from './entities/patient.entity';
-export * from './entities/department.entity';
-export * from './entities/department-template.entity';
-export * from './entities/appointment.entity';
-export * from './entities/prescription.entity';
-export * from './entities/medicine.entity';
-export * from './entities/medicine-stock.entity';
-export * from './entities/invoice.entity';
-export * from './entities/lab-order.entity';
-export * from './entities/notification.entity';
+export * from './entities/base.entity';
+
+// Public schema — global/system entities
+export * from './entities/public/hospital.entity';
+export * from './entities/public/user.entity';
+export * from './entities/public/branch.entity';
+export * from './entities/public/department-template.entity';
+
+// Hospital schema — clinical/domain entities
+export * from './entities/hospital/department.entity';
+export * from './entities/hospital/doctor.entity';
+export * from './entities/hospital/patient.entity';
+export * from './entities/hospital/appointment.entity';
+export * from './entities/hospital/prescription.entity';
+export * from './entities/hospital/medicine.entity';
+export * from './entities/hospital/medicine-stock.entity';
+export * from './entities/hospital/invoice.entity';
+export * from './entities/hospital/lab-order.entity';
+export * from './entities/hospital/notification.entity';

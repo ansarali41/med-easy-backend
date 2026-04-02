@@ -5,6 +5,7 @@ import { CoreModule } from '@app/common';
 import { HospitalServiceController } from './hospital-service.controller';
 import { HospitalServiceService } from './hospital-service.service';
 import { OnboardModule } from './onboard/onboard.module';
+import { BranchModule } from './branch/branch.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { OnboardModule } from './onboard/onboard.module';
     DatabaseModule,
     CoreModule,
     OnboardModule,
+    BranchModule,
   ],
   controllers: [HospitalServiceController],
   providers: [HospitalServiceService],

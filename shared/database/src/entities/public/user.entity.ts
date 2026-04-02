@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
 export enum UserRole {
   SUPER_ADMIN = 'super_admin',
@@ -17,11 +12,8 @@ export enum UserRole {
   PATIENT = 'patient',
 }
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'users', schema: 'public' })
+export class User extends BaseEntity {
   @Column({ unique: true })
   supabaseId: string;
 
@@ -34,18 +26,13 @@ export class User {
   @Column({ nullable: true })
   lastName: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.PATIENT })
+  // Values: super_admin | hospital_admin | doctor | nurse | receptionist | pharmacist | lab_technician | patient
+  @Column({ type: 'text', default: UserRole.PATIENT })
   role: UserRole;
 
   @Column({ nullable: true })
   tenantId: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

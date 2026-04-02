@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
 export enum AppointmentStatus {
   PENDING = 'pending',
@@ -15,11 +10,8 @@ export enum AppointmentStatus {
   NO_SHOW = 'no_show',
 }
 
-@Entity('appointments')
-export class Appointment {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'appointments' })
+export class Appointment extends BaseEntity {
   @Column()
   patientId: string;
 
@@ -32,7 +24,8 @@ export class Appointment {
   @Column({ type: 'timestamp' })
   scheduledAt: Date;
 
-  @Column({ type: 'enum', enum: AppointmentStatus, default: AppointmentStatus.PENDING })
+  // Values: pending | confirmed | in_progress | completed | cancelled | no_show
+  @Column({ type: 'text', default: AppointmentStatus.PENDING })
   status: AppointmentStatus;
 
   @Column({ nullable: true })
@@ -43,10 +36,4 @@ export class Appointment {
 
   @Column({ nullable: true })
   queuePosition: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
