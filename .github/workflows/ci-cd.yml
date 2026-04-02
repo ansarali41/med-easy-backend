@@ -37,8 +37,8 @@ jobs:
           LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
           echo "PR labels: $LABELS"
 
-          if echo "$LABELS" | grep -q '"deploy:all"'; then
-            echo "Label deploy:all found — deploying all services"
+          if echo "$LABELS" | grep -q '"all"'; then
+            echo "Label 'all' found — deploying all services"
             echo "services=$ALL" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -46,7 +46,7 @@ jobs:
           SERVICES="["
           FIRST=true
           for svc in hospital appointment patient prescription pharmacy billing notification lab; do
-            if echo "$LABELS" | grep -q "\"deploy:$svc\""; then
+            if echo "$LABELS" | grep -q "\"$svc\""; then
               [ "$FIRST" = true ] && FIRST=false || SERVICES="$SERVICES,"
               SERVICES="${SERVICES}\"$svc\""
             fi
