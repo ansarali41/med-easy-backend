@@ -11,8 +11,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         type: 'postgres',
         url: config.get<string>('POSTGRESQL_DATABASE_URL'),
         entities: [__dirname + '/entities/**/*.entity{.ts,.js}'],
-        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        synchronize: config.get<string>('NODE_ENV') === 'development',
+        // migrations: [__dirname + '/migrations/**/*{.ts,.js}'], // TODO: enable after MVP
+        synchronize: true,
         logging: config.get<string>('NODE_ENV') === 'development',
         autoLoadEntities: true,
       }),

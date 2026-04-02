@@ -6,74 +6,13 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
 
-    // ─── Enums ────────────────────────────────────────────────────────────────
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."users_role_enum" AS ENUM(
-        'super_admin',
-        'hospital_admin',
-        'doctor',
-        'nurse',
-        'receptionist',
-        'pharmacist',
-        'lab_technician',
-        'patient'
-      )
-    `);
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."appointments_status_enum" AS ENUM(
-        'pending',
-        'confirmed',
-        'in_progress',
-        'completed',
-        'cancelled',
-        'no_show'
-      )
-    `);
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."prescriptions_status_enum" AS ENUM(
-        'draft',
-        'finalized',
-        'dispensed',
-        'cancelled'
-      )
-    `);
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."invoices_status_enum" AS ENUM(
-        'pending',
-        'paid',
-        'partial',
-        'cancelled'
-      )
-    `);
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."lab_orders_status_enum" AS ENUM(
-        'pending',
-        'in_progress',
-        'completed',
-        'cancelled'
-      )
-    `);
-
-    await queryRunner.query(`
-      CREATE TYPE "public"."notifications_type_enum" AS ENUM(
-        'email',
-        'in_app',
-        'sms'
-      )
-    `);
-
     // ─── Tables ───────────────────────────────────────────────────────────────
 
     await queryRunner.query(`
-      CREATE TABLE "hospitals" (
-        "id"        UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-        "name"      VARCHAR     NOT NULL,
-        "slug"      VARCHAR     NOT NULL UNIQUE,
+      CREATE TABLE IF NOT EXISTS "hospitals" (
+        "id"        UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "name"      VARCHAR   NOT NULL,
+        "slug"      VARCHAR   NOT NULL UNIQUE,
         "type"      VARCHAR,
         "phone"     VARCHAR,
         "email"     VARCHAR,
@@ -81,46 +20,47 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
         "city"      VARCHAR,
         "country"   VARCHAR,
         "website"   VARCHAR,
-        "isActive"  BOOLEAN     NOT NULL DEFAULT true,
-        "createdAt" TIMESTAMP   NOT NULL DEFAULT now(),
-        "updatedAt" TIMESTAMP   NOT NULL DEFAULT now()
+        "isActive"  BOOLEAN   NOT NULL DEFAULT true,
+        "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt" TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "users" (
-        "id"          UUID                      PRIMARY KEY DEFAULT gen_random_uuid(),
-        "supabaseId"  VARCHAR                   NOT NULL UNIQUE,
-        "email"       VARCHAR                   NOT NULL,
-        "firstName"   VARCHAR,
-        "lastName"    VARCHAR,
-        "role"        "public"."users_role_enum" NOT NULL DEFAULT 'patient',
-        "tenantId"    VARCHAR,
-        "isActive"    BOOLEAN                   NOT NULL DEFAULT true,
-        "createdAt"   TIMESTAMP                 NOT NULL DEFAULT now(),
-        "updatedAt"   TIMESTAMP                 NOT NULL DEFAULT now()
+      CREATE TABLE IF NOT EXISTS "users" (
+        "id"         UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "supabaseId" VARCHAR   NOT NULL UNIQUE,
+        "email"      VARCHAR   NOT NULL,
+        "firstName"  VARCHAR,
+        "lastName"   VARCHAR,
+        -- Values: super_admin | hospital_admin | doctor | nurse | receptionist | pharmacist | lab_technician | patient
+        "role"       TEXT      NOT NULL DEFAULT 'patient',
+        "tenantId"   VARCHAR,
+        "isActive"   BOOLEAN   NOT NULL DEFAULT true,
+        "createdAt"  TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt"  TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "doctors" (
-        "id"              UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
-        "userId"          VARCHAR   NOT NULL,
-        "firstName"       VARCHAR   NOT NULL,
-        "lastName"        VARCHAR   NOT NULL,
-        "email"           VARCHAR   NOT NULL UNIQUE,
-        "phone"           VARCHAR,
-        "specialization"  VARCHAR,
-        "departmentId"    VARCHAR,
-        "licenseNumber"   VARCHAR,
-        "isActive"        BOOLEAN   NOT NULL DEFAULT true,
-        "createdAt"       TIMESTAMP NOT NULL DEFAULT now(),
-        "updatedAt"       TIMESTAMP NOT NULL DEFAULT now()
+      CREATE TABLE IF NOT EXISTS "doctors" (
+        "id"             UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "userId"         VARCHAR   NOT NULL,
+        "firstName"      VARCHAR   NOT NULL,
+        "lastName"       VARCHAR   NOT NULL,
+        "email"          VARCHAR   NOT NULL UNIQUE,
+        "phone"          VARCHAR,
+        "specialization" VARCHAR,
+        "departmentId"   VARCHAR,
+        "licenseNumber"  VARCHAR,
+        "isActive"       BOOLEAN   NOT NULL DEFAULT true,
+        "createdAt"      TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt"      TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "patients" (
+      CREATE TABLE IF NOT EXISTS "patients" (
         "id"          UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
         "userId"      VARCHAR   NOT NULL,
         "firstName"   VARCHAR   NOT NULL,
@@ -138,7 +78,7 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "departments" (
+      CREATE TABLE IF NOT EXISTS "departments" (
         "id"          UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
         "name"        VARCHAR   NOT NULL,
         "description" VARCHAR,
@@ -149,7 +89,7 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "department_templates" (
+      CREATE TABLE IF NOT EXISTS "department_templates" (
         "id"          UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
         "name"        VARCHAR   NOT NULL,
         "description" VARCHAR,
@@ -160,51 +100,53 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "appointments" (
-        "id"            UUID                               PRIMARY KEY DEFAULT gen_random_uuid(),
-        "patientId"     VARCHAR                            NOT NULL,
-        "doctorId"      VARCHAR                            NOT NULL,
+      CREATE TABLE IF NOT EXISTS "appointments" (
+        "id"            UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "patientId"     VARCHAR   NOT NULL,
+        "doctorId"      VARCHAR   NOT NULL,
         "departmentId"  VARCHAR,
-        "scheduledAt"   TIMESTAMP                          NOT NULL,
-        "status"        "public"."appointments_status_enum" NOT NULL DEFAULT 'pending',
+        "scheduledAt"   TIMESTAMP NOT NULL,
+        -- Values: pending | confirmed | in_progress | completed | cancelled | no_show
+        "status"        TEXT      NOT NULL DEFAULT 'pending',
         "notes"         VARCHAR,
         "cancelReason"  VARCHAR,
         "queuePosition" INTEGER,
-        "createdAt"     TIMESTAMP                          NOT NULL DEFAULT now(),
-        "updatedAt"     TIMESTAMP                          NOT NULL DEFAULT now()
+        "createdAt"     TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt"     TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "prescriptions" (
-        "id"            UUID                                PRIMARY KEY DEFAULT gen_random_uuid(),
-        "patientId"     VARCHAR                             NOT NULL,
-        "doctorId"      VARCHAR                             NOT NULL,
+      CREATE TABLE IF NOT EXISTS "prescriptions" (
+        "id"            UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "patientId"     VARCHAR   NOT NULL,
+        "doctorId"      VARCHAR   NOT NULL,
         "appointmentId" VARCHAR,
-        "status"        "public"."prescriptions_status_enum" NOT NULL DEFAULT 'draft',
+        -- Values: draft | finalized | dispensed | cancelled
+        "status"        TEXT      NOT NULL DEFAULT 'draft',
         "notes"         VARCHAR,
         "pdfUrl"        VARCHAR,
-        "createdAt"     TIMESTAMP                           NOT NULL DEFAULT now(),
-        "updatedAt"     TIMESTAMP                           NOT NULL DEFAULT now()
+        "createdAt"     TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt"     TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "medicines" (
-        "id"          UUID             PRIMARY KEY DEFAULT gen_random_uuid(),
-        "name"        VARCHAR          NOT NULL,
+      CREATE TABLE IF NOT EXISTS "medicines" (
+        "id"          UUID           PRIMARY KEY DEFAULT gen_random_uuid(),
+        "name"        VARCHAR        NOT NULL,
         "genericName" VARCHAR,
         "category"    VARCHAR,
         "unit"        VARCHAR,
-        "price"       DECIMAL(10, 2)   NOT NULL DEFAULT 0,
-        "isActive"    BOOLEAN          NOT NULL DEFAULT true,
-        "createdAt"   TIMESTAMP        NOT NULL DEFAULT now(),
-        "updatedAt"   TIMESTAMP        NOT NULL DEFAULT now()
+        "price"       DECIMAL(10, 2) NOT NULL DEFAULT 0,
+        "isActive"    BOOLEAN        NOT NULL DEFAULT true,
+        "createdAt"   TIMESTAMP      NOT NULL DEFAULT now(),
+        "updatedAt"   TIMESTAMP      NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "medicine_stocks" (
+      CREATE TABLE IF NOT EXISTS "medicine_stocks" (
         "id"                UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
         "medicineId"        VARCHAR   NOT NULL,
         "quantity"          INTEGER   NOT NULL DEFAULT 0,
@@ -217,42 +159,45 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "invoices" (
-        "id"            UUID                           PRIMARY KEY DEFAULT gen_random_uuid(),
-        "patientId"     VARCHAR                        NOT NULL,
+      CREATE TABLE IF NOT EXISTS "invoices" (
+        "id"            UUID           PRIMARY KEY DEFAULT gen_random_uuid(),
+        "patientId"     VARCHAR        NOT NULL,
         "appointmentId" VARCHAR,
-        "totalAmount"   DECIMAL(10, 2)                 NOT NULL DEFAULT 0,
-        "paidAmount"    DECIMAL(10, 2)                 NOT NULL DEFAULT 0,
-        "status"        "public"."invoices_status_enum" NOT NULL DEFAULT 'pending',
+        "totalAmount"   DECIMAL(10, 2) NOT NULL DEFAULT 0,
+        "paidAmount"    DECIMAL(10, 2) NOT NULL DEFAULT 0,
+        -- Values: pending | paid | partial | cancelled
+        "status"        TEXT           NOT NULL DEFAULT 'pending',
         "notes"         VARCHAR,
-        "createdAt"     TIMESTAMP                      NOT NULL DEFAULT now(),
-        "updatedAt"     TIMESTAMP                      NOT NULL DEFAULT now()
+        "createdAt"     TIMESTAMP      NOT NULL DEFAULT now(),
+        "updatedAt"     TIMESTAMP      NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "lab_orders" (
-        "id"            UUID                              PRIMARY KEY DEFAULT gen_random_uuid(),
-        "patientId"     VARCHAR                           NOT NULL,
-        "doctorId"      VARCHAR                           NOT NULL,
+      CREATE TABLE IF NOT EXISTS "lab_orders" (
+        "id"            UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "patientId"     VARCHAR   NOT NULL,
+        "doctorId"      VARCHAR   NOT NULL,
         "appointmentId" VARCHAR,
-        "testName"      VARCHAR                           NOT NULL,
-        "status"        "public"."lab_orders_status_enum" NOT NULL DEFAULT 'pending',
+        "testName"      VARCHAR   NOT NULL,
+        -- Values: pending | in_progress | completed | cancelled
+        "status"        TEXT      NOT NULL DEFAULT 'pending',
         "notes"         VARCHAR,
-        "createdAt"     TIMESTAMP                         NOT NULL DEFAULT now(),
-        "updatedAt"     TIMESTAMP                         NOT NULL DEFAULT now()
+        "createdAt"     TIMESTAMP NOT NULL DEFAULT now(),
+        "updatedAt"     TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
 
     await queryRunner.query(`
-      CREATE TABLE "notifications" (
-        "id"        UUID                                  PRIMARY KEY DEFAULT gen_random_uuid(),
-        "userId"    VARCHAR                               NOT NULL,
-        "title"     VARCHAR                               NOT NULL,
-        "message"   TEXT                                  NOT NULL,
-        "type"      "public"."notifications_type_enum"    NOT NULL DEFAULT 'in_app',
-        "isRead"    BOOLEAN                               NOT NULL DEFAULT false,
-        "createdAt" TIMESTAMP                             NOT NULL DEFAULT now()
+      CREATE TABLE IF NOT EXISTS "notifications" (
+        "id"        UUID      PRIMARY KEY DEFAULT gen_random_uuid(),
+        "userId"    VARCHAR   NOT NULL,
+        "title"     VARCHAR   NOT NULL,
+        "message"   TEXT      NOT NULL,
+        -- Values: email | in_app | sms
+        "type"      TEXT      NOT NULL DEFAULT 'in_app',
+        "isRead"    BOOLEAN   NOT NULL DEFAULT false,
+        "createdAt" TIMESTAMP NOT NULL DEFAULT now()
       )
     `);
   }
@@ -271,11 +216,5 @@ export class CreateInitialSchema1700000000000 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE IF EXISTS "doctors"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "users"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "hospitals"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."notifications_type_enum"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."lab_orders_status_enum"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."invoices_status_enum"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."prescriptions_status_enum"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."appointments_status_enum"`);
-    await queryRunner.query(`DROP TYPE IF EXISTS "public"."users_role_enum"`);
   }
 }

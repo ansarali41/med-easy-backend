@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
 export enum InvoiceStatus {
   PENDING = 'pending',
@@ -13,11 +8,8 @@ export enum InvoiceStatus {
   CANCELLED = 'cancelled',
 }
 
-@Entity('invoices')
-export class Invoice {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'invoices' })
+export class Invoice extends BaseEntity {
   @Column()
   patientId: string;
 
@@ -30,15 +22,10 @@ export class Invoice {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   paidAmount: number;
 
-  @Column({ type: 'enum', enum: InvoiceStatus, default: InvoiceStatus.PENDING })
+  // Values: pending | paid | partial | cancelled
+  @Column({ type: 'text', default: InvoiceStatus.PENDING })
   status: InvoiceStatus;
 
   @Column({ nullable: true })
   notes: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

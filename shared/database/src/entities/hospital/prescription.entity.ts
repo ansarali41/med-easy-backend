@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
 export enum PrescriptionStatus {
   DRAFT = 'draft',
@@ -13,11 +8,8 @@ export enum PrescriptionStatus {
   CANCELLED = 'cancelled',
 }
 
-@Entity('prescriptions')
-export class Prescription {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'prescriptions' })
+export class Prescription extends BaseEntity {
   @Column()
   patientId: string;
 
@@ -27,7 +19,8 @@ export class Prescription {
   @Column({ nullable: true })
   appointmentId: string;
 
-  @Column({ type: 'enum', enum: PrescriptionStatus, default: PrescriptionStatus.DRAFT })
+  // Values: draft | finalized | dispensed | cancelled
+  @Column({ type: 'text', default: PrescriptionStatus.DRAFT })
   status: PrescriptionStatus;
 
   @Column({ nullable: true })
@@ -35,10 +28,4 @@ export class Prescription {
 
   @Column({ nullable: true })
   pdfUrl: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

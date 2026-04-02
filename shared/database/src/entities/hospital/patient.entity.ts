@@ -1,16 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
-@Entity('patients')
-export class Patient {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'patients' })
+export class Patient extends BaseEntity {
   @Column()
   userId: string;
 
@@ -40,10 +32,4 @@ export class Patient {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

@@ -1,16 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../base.entity';
 
-@Entity('branches')
-export class Branch {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+@Entity({ name: 'branches', schema: 'public' })
+export class Branch extends BaseEntity {
   @Column()
   hospitalId: string;
 
@@ -34,10 +26,4 @@ export class Branch {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
