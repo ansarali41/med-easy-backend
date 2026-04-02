@@ -1,10 +1,10 @@
-FROM node:20-alpine AS builder
+FROM oven/bun:1 AS builder
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile
 COPY . .
 ARG SERVICE_NAME
-RUN npx nest build ${SERVICE_NAME}
+RUN bunx nest build ${SERVICE_NAME}
 
 FROM node:20-alpine AS runner
 WORKDIR /app
