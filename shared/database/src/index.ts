@@ -1,5 +1,6 @@
 export * from './database.module';
 export * from './entities/hospital.entity';
+export * from './entities/branch.entity';
 export * from './entities/user.entity';
 export * from './entities/doctor.entity';
 export * from './entities/patient.entity';
