@@ -11,6 +11,15 @@
   "defaultLibraryPrefix": "@app",
   "root": "apps/hospital",
   "projects": {
+    "super-admin": {
+      "type": "application",
+      "root": "apps/super-admin",
+      "entryFile": "main",
+      "sourceRoot": "apps/super-admin/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/super-admin/tsconfig.app.json"
+      }
+    },
     "hospital": {
       "type": "application",
       "root": "apps/hospital",

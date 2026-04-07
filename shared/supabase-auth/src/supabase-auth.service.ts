@@ -27,7 +27,11 @@ export class SupabaseAuthService {
     return data.user;
   }
 
-  async createUser(email: string, password: string, metadata?: Record<string, unknown>) {
+  async createUser(
+    email: string,
+    password: string,
+    metadata?: Record<string, unknown>,
+  ) {
     const { data, error } = await this.client.auth.admin.createUser({
       email,
       password,
@@ -36,6 +40,13 @@ export class SupabaseAuthService {
     });
     if (error) throw new Error(error.message);
     return data.user;
+  }
+
+  async updateUserMetadata(id: string, metadata: Record<string, unknown>) {
+    const { error } = await this.client.auth.admin.updateUserById(id, {
+      user_metadata: metadata,
+    });
+    if (error) throw new Error(error.message);
   }
 
   async deleteUser(id: string) {

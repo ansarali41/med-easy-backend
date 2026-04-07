@@ -13,7 +13,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "ignoreDeprecations": "5.0",
+    "ignoreDeprecations": "5.9",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,

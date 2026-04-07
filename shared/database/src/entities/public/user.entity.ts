@@ -14,10 +14,10 @@ export enum UserRole {
 
 @Entity({ name: 'users', schema: 'public' })
 export class User extends BaseEntity {
-  @Column({ unique: true })
-  supabaseId: string;
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  supabaseId: string | null;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })
@@ -35,4 +35,7 @@ export class User extends BaseEntity {
 
   @Column({ default: false })
   isActive: boolean;
+
+  @Column({ default: true })
+  canLogin: boolean;
 }

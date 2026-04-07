@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiResponse } from '../dto/api-response.dto';
+import { SystemException } from '../exceptions/system.exception';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -20,8 +21,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
+    let errors: Record<string, { message: string }> | undefined;
 
-    if (exception instanceof HttpException) {
+    if (exception instanceof SystemException) {
+      status = exception.getStatus();
+      message = exception.message;
+      errors = exception.getErrors();
+    } else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 
@@ -47,6 +53,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof Error ? exception.stack : String(exception),
     );
 
-    response.status(status).json(ApiResponse.fail(message));
+    response.status(status).json(ApiResponse.fail(message, errors));
   }
 }

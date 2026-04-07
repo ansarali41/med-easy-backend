@@ -1,6 +1,11 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../base.entity';
 
+export enum HospitalStatus {
+  INACTIVE = 0,
+  ACTIVE = 1,
+}
+
 @Entity({ name: 'hospitals', schema: 'public' })
 export class Hospital extends BaseEntity {
   @Column()
@@ -30,6 +35,6 @@ export class Hospital extends BaseEntity {
   @Column({ nullable: true })
   website: string;
 
-  @Column({ default: false })
-  isActive: boolean;
+  @Column({ type: 'smallint', default: HospitalStatus.ACTIVE })
+  status: HospitalStatus;
 }

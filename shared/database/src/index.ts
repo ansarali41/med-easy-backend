@@ -1,4 +1,5 @@
 export * from './database.module';
+export * from './database.service';
 export * from './entities/base.entity';
 
 // Public schema — global/system entities
@@ -6,6 +7,8 @@ export * from './entities/public/hospital.entity';
 export * from './entities/public/user.entity';
 export * from './entities/public/branch.entity';
 export * from './entities/public/department-template.entity';
+export * from './entities/public/user-branch.entity';
+export * from './entities/public/hospital-role.entity';
 
 // Hospital schema — clinical/domain entities
 export * from './entities/hospital/department.entity';
